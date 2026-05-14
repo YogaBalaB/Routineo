@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Poppins", sans-serif;
+  
+  --color-lavender: #E0E7FF;
+  --color-soft-blue: #DBEAFE;
+  --color-dark-navy: #1E1B4B;
+  --color-coral: #FB7185;
+  --color-neon-purple: #C084FC;
+  --accent-color: #7C3AED;
+}
+
+@layer base {
+  :root {
+    --accent-color: #7C3AED;
+  }
+}
+
+@layer components {
+  .switch {
+    @apply relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#7C3AED] focus:ring-offset-2;
+  }
+  .switch-on {
+    @apply bg-[#7C3AED];
+  }
+  .switch-off {
+    @apply bg-slate-200;
+  }
+  .switch-thumb {
+    @apply pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out;
+  }
+  .switch-thumb-on {
+     @apply translate-x-5;
+  }
+  .switch-thumb-off {
+     @apply translate-x-0;
+  }
+}
+
+@layer base {
+  body {
+    @apply font-sans antialiased bg-slate-50 text-slate-900;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight text-dark-navy;
+  }
+}
+

@@ -1,0 +1,67 @@
+{
+  "users": [
+    {
+      "id": "demo-user",
+      "email": "demo@focusflow.com",
+      "password": "$2b$10$cGWu2vi/yaiaftTP.0xk0uTbP7O8VxDpDsRZLund5YdrArdmYn5ri",
+      "name": "Demo Student"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "demo-task-1",
+      "userId": "demo-user",
+      "title": "Review Student Productivity PRD",
+      "dueDate": "2026-05-12",
+      "priority": "high",
+      "completed": false,
+      "createdAt": "2026-05-12T07:20:34.918Z",
+      "category": "Work",
+      "notes": "Focus on the technical requirements section.",
+      "subtasks": [
+        {
+          "id": "st1",
+          "title": "Read document",
+          "completed": true
+        },
+        {
+          "id": "st2",
+          "title": "Write summary",
+          "completed": false
+        }
+      ],
+      "pinned": true
+    },
+    {
+      "id": "demo-task-2",
+      "userId": "demo-user",
+      "title": "Setup FocusFlow App",
+      "dueDate": "2026-05-12",
+      "priority": "medium",
+      "completed": true,
+      "createdAt": "2026-05-12T07:20:34.918Z",
+      "category": "Personal",
+      "notes": "Check all the initial environment variables.",
+      "subtasks": [],
+      "pinned": false
+    }
+  ],
+  "habits": [
+    {
+      "id": "demo-habit-1",
+      "userId": "demo-user",
+      "title": "Read for 30 minutes",
+      "icon": "Book",
+      "category": "Study",
+      "goalDays": 30,
+      "streak": 12,
+      "longestStreak": 12,
+      "missedDays": 2,
+      "lastCheckIn": "2026-05-11",
+      "history": []
+    }
+  ],
+  "sessions": [],
+  "moods": [],
+  "earnedBadges": []
+}
