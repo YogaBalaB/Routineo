@@ -1,35 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import auth, tasks, habits, sessions, moods, subtasks
-from contextlib import asynccontextmanager
+from routers import auth, tasks, habits, sessions, moods, subtasks, badges
 from database import get_db
-from auth_utils import get_password_hash
-import uuid
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    db = get_db()
-    try:
-        # Check if demo user exists
-        res = db.table("users").select("*").eq("email", "demo@focusflow.com").execute().data
-        if not res:
-            print("Seeding demo user...")
-            demo_id = str(uuid.uuid4())
-            db.table("users").insert({
-                "id": demo_id,
-                "email": "demo@focusflow.com",
-                "password": get_password_hash("password123"),
-                "name": "Demo Student"
-            }).execute()
-    except Exception as e:
-        print(f"Startup error: {e}")
-    yield
-
+# ✅ Define app FIRST
 app = FastAPI(
     title="FocusFlow API",
     description="Backend API for FocusFlow Productivity App",
-    version="1.0.0",
-    lifespan=lifespan
+    version="1.0.0"
 )
 
 # CORS middleware
@@ -48,6 +26,16 @@ app.include_router(subtasks.router)
 app.include_router(habits.router)
 app.include_router(sessions.router)
 app.include_router(moods.router)
+app.include_router(badges.router)
+
+# ✅ Startup check AFTER app is defined
+@app.on_event("startup")
+async def startup_check():
+    try:
+        get_db().from_("tasks").select("id").limit(1).execute()
+        print("✅ DB connection OK")
+    except Exception as e:
+        print(f"⚠️ DB connection issue: {e}")
 
 @app.get("/")
 async def root():

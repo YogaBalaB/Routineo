@@ -7,8 +7,7 @@ from auth_utils import get_password_hash, verify_password, create_access_token, 
 router = APIRouter(prefix="/api/auth", tags=["Authentication"])
 
 @router.post("/register", response_model=Token)
-async def register(user_data: UserCreate):
-    db = get_db()
+async def register(user_data: UserCreate, db=Depends(get_db)):
     existing = db.table("users").select("*").eq("email", user_data.email).execute().data
     if existing:
         raise HTTPException(status_code=400, detail="User already exists")
@@ -32,8 +31,7 @@ async def register(user_data: UserCreate):
     }
 
 @router.post("/login", response_model=Token)
-async def login(credentials: UserLogin):
-    db = get_db()
+async def login(credentials: UserLogin, db=Depends(get_db)):
     user = db.table("users").select("*").eq("email", credentials.email).execute().data
     if not user or not verify_password(credentials.password, user[0]['password']):
         raise HTTPException(status_code=400, detail="Invalid credentials")
@@ -54,8 +52,7 @@ async def login(credentials: UserLogin):
     }
 
 @router.get("/me", response_model=UserResponse)
-async def me(current_user: dict = Depends(get_current_user)):
-    db = get_db()
+async def me(current_user: dict = Depends(get_current_user), db=Depends(get_db)):
     user = db.table("users").select("*").eq("id", current_user['id']).execute().data
     if not user:
         raise HTTPException(status_code=404, detail="User not found")

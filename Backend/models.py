@@ -46,6 +46,9 @@ class SubTaskUpdate(AppModel):
 class SubTask(SubTaskBase):
     id: str
     taskId: str = Field(..., alias="task_id")
+    completedAt: Optional[str] = Field(None, alias="completed_at")
+    dueDate: Optional[str] = Field(None, alias="due_date")
+    createdAt: Optional[str] = Field(None, alias="created_at")
 
 class TaskBase(AppModel):
     title: str = Field(..., min_length=1)
@@ -65,7 +68,7 @@ class TaskUpdate(AppModel):
     priority: Optional[str] = None
     category: Optional[str] = None
     notes: Optional[str] = None
-    subtasks: Optional[List[SubTask]] = None
+    subtasks: Optional[List[dict]] = None  # Accept raw dicts to avoid alias issues
     pinned: Optional[bool] = None
     completed: Optional[bool] = None
 
