@@ -15,6 +15,7 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 import { User, Task, Habit, Session, Mood, EarnedBadge } from "../types";
 import { cn } from "../lib/utils";
+import { formatDate } from "../lib/dateUtils";
 import { badgeEmitter } from "../components/BadgeEarnedPopup";
 import BadgeGrid from "../components/BadgeGrid";
 
@@ -318,7 +319,7 @@ export default function Dashboard({ user }: Props) {
                           )}
                        </div>
                        <div className="flex flex-col items-end gap-1">
-                          <p className="text-sm font-medium text-slate-500">{new Date(task.dueDate).toLocaleDateString()}</p>
+                          <p className="text-sm font-medium text-slate-500">{formatDate(task.dueDate)}</p>
                           <button 
                             onClick={() => navigate(`/tasks/${task.id}`)}
                             className="p-1.5 text-slate-300 hover:text-neon-purple hover:bg-neon-purple/5 rounded-lg transition-all"

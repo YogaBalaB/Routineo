@@ -1,0 +1,235 @@
+================================================================================
+                    Routineo PRODUCTIVITY APP - LEARNING GUIDE
+================================================================================
+
+Welcome to the Routineo learning guide! This document is designed to help you 
+understand the full architecture, file structure, technology stack, run commands, 
+and underlying concepts of both the Frontend and Backend of the Routineo app.
+
+--------------------------------------------------------------------------------
+1. PROJECT OVERVIEW
+--------------------------------------------------------------------------------
+Routineo is a premium modern productivity web application designed to help users 
+manage their daily lives. It integrates:
+*   Task & Subtask Management (to-do lists, progress tracking)
+*   Habit Tracking (daily streaks, frequency logs)
+*   Focus Sessions (Timer/Pomodoro logging)
+*   Mood Tracking (logging mental state during work)
+*   Gamified Badges (unlocking rewards for completing tasks, maintaining streaks)
+
+The project is split into a modular client-server architecture:
+*   Backend: High-performance Python REST API built with FastAPI.
+*   Frontend: Interactive React application built with Vite and Tailwind CSS v4.
+
+================================================================================
+2. BACKEND ARCHITECTURE & DIRECTORY STRUCTURE
+================================================================================
+The Backend is located in the `/Backend` directory. It is structured to be highly 
+modular, clean, and database-agnostic through an API layer.
+
+--------------------------------------------------
+A. Technology Stack
+--------------------------------------------------
+*   FastAPI: A modern, fast (high-performance) web framework for building APIs with 
+    Python 3.8+ based on standard Python type hints.
+*   Uvicorn: A lightning-fast ASGI server implementation for Python, used to run the API.
+*   Supabase (postgrest): A client to interact directly with the Supabase PostgreSQL 
+    database using standard RESTful commands, avoiding complex SQL boilerplate.
+*   Pydantic: Data validation and settings management using Python type annotations. 
+    It parses incoming request bodies and structures outgoing responses.
+*   Python-Jose & Passlib (Bcrypt): Handles authentication security. `passlib` is used to 
+    safely hash passwords, and `python-jose` generates and verifies JSON Web Tokens (JWT).
+*   Dotenv: Loads configuration (like API keys and database URLs) from a `.env` file.
+
+--------------------------------------------------
+B. File & Folder Structure
+--------------------------------------------------
+/Backend
+├── venv/                   # Python Virtual Environment (isolated packages)
+├── .env                    # Environment variables (DB URL, API Keys - KEEP SECRET)
+├── .env.example            # Template for environment variables
+├── requirements.txt        # Python package dependencies
+├── schema.sql              # Database table definitions for PostgreSQL
+├── database.py             # Establishes connection to Supabase / PostgREST Client
+├── main.py                 # FastAPI Application Entrypoint (registers routers & middlewear)
+├── models.py               # Pydantic schemas (defines shapes of request/response payloads)
+├── auth_utils.py           # Helper functions for JWT generation, decoding, & password hashing
+├── utils.py                # Generic helper utilities (like auth dependency validators)
+└── routers/                # Sub-modules containing API endpoint routes
+    ├── __init__.py         # Makes 'routers' a Python package
+    ├── auth.py             # User Register, Login, and Session retrieval routes
+    ├── tasks.py            # CRUD operations for main Tasks
+    ├── subtasks.py         # CRUD operations for Subtasks nested inside Tasks
+    ├── habits.py           # CRUD operations for tracking Habits
+    ├── sessions.py         # Tracking Pomodoro / Focus sessions
+    ├── moods.py            # Logging mood data
+    └── badges.py           # Unlocking and reading user badges/achievements
+
+================================================================================
+3. FRONTEND ARCHITECTURE & DIRECTORY STRUCTURE
+================================================================================
+The Frontend is located in the `/Frontend` directory. It uses a modern React layout 
+with beautiful, responsive UI styling and component isolation.
+
+--------------------------------------------------
+A. Technology Stack
+--------------------------------------------------
+*   React 19: The core UI library utilizing functional components and hooks for state.
+*   Vite 6: A super-fast frontend build tool and development server.
+*   Tailwind CSS v4: A utility-first CSS framework integrated via Vite for rapid, 
+    highly customized, and visually impressive designs.
+*   TypeScript: Static typing for JavaScript, helping catch bugs early and offering 
+    intelligent code completion.
+*   React Router (v7): Handles client-side navigation (routing) between different pages.
+*   Axios: A promise-based HTTP client for making API requests to the Python backend.
+*   Motion (Framer Motion): Used to create smooth animations, page transitions, and 
+    premium micro-interactions.
+*   Lucide React: A modern icon library matching Routineo's sleek look.
+*   Recharts: A composable charting library used to render the productivity analytics.
+
+--------------------------------------------------
+B. File & Folder Structure
+--------------------------------------------------
+/Frontend
+├── node_modules/           # Installed npm packages
+├── public/                 # Static assets (favicons, public images)
+├── index.html              # Core HTML structure where React mounts
+├── package.json            # npm package dependencies and run scripts
+├── tsconfig.json           # TypeScript configuration details
+├── vite.config.ts          # Vite bundler configuration (includes Tailwind CSS v4 setup)
+├── server.ts               # Production Express server (for deploying the built frontend)
+└── src/                    # React codebase
+    ├── main.tsx            # Entrypoint that mounts React to the index.html DOM
+    ├── App.tsx             # Root React component (sets up React Router, Toast, & Auth provider)
+    ├── index.css           # Global CSS styles and Tailwind directives
+    ├── types.ts            # Core TypeScript interfaces (Task, Habit, User, Badge, Session)
+    ├── lib/                # Shared internal utilities (e.g. Axios configurations, custom hooks)
+    ├── constants/          # Application constants
+    ├── components/         # Reusable presentation widgets (Buttons, Cards, Navbar, Modals)
+    └── pages/              # Individual full-page screen components
+        ├── LandingPage.tsx     # The welcome page (marketing overview, call-to-action)
+        ├── LoginPage.tsx       # Auth login (credentials entry)
+        ├── RegisterPage.tsx    # Auth registration (account creation)
+        ├── Dashboard.tsx       # The daily overview hub (tasks summary, habits tracker)
+        ├── TasksPage.tsx       # Grid/List view of tasks with search & filter tools
+        ├── TaskDetailsPage.tsx # Detailed view of a task showing descriptions and subtasks
+        ├── HabitsPage.tsx      # Comprehensive habit grid showing streaks and daily toggles
+        ├── AnalyticsPage.tsx   # Dashboard displaying productivity graphs, timers, and trends
+        └── ProfilePage.tsx     # User settings, achievements, and unlocked badges
+
+================================================================================
+4. HOW THE FRONTEND AND BACKEND CONNECT (API FLOW)
+================================================================================
+Understanding how client-server communication operates is key to working on Routineo:
+
+Step 1: The User logs in on the Frontend (`LoginPage.tsx`).
+Step 2: Axios sends a POST request with credentials to the Backend (`/routers/auth.py` -> `/auth/login`).
+Step 3: The Backend verifies the password using Bcrypt:
+        *   If valid, it generates a JSON Web Token (JWT) signed with a secret key.
+        *   It sends this token back to the Frontend.
+Step 4: The Frontend saves this JWT in `localStorage` or React context state.
+Step 5: For subsequent actions (like fetching tasks or adding habits), the Frontend includes 
+        the JWT token in the request headers:
+        `Authorization: Bearer <YOUR_JWT_TOKEN>`
+Step 6: The Backend interceptor (FastAPI dependencies in `utils.py`) extracts and decodes the token:
+        *   If the token is valid, it retrieves the user identity (`user_id`).
+        *   It then queries Supabase Database for resources belonging ONLY to that `user_id`.
+Step 7: The Backend returns the database data as JSON to the Frontend.
+Step 8: React updates its local state, and the UI re-renders instantly to show the new data.
+
+================================================================================
+5. RUN COMMANDS REFERENCE (HOW TO START)
+================================================================================
+Follow these steps to run both sections of Routineo locally on Windows.
+
+--------------------------------------------------
+A. RUNNING THE BACKEND
+--------------------------------------------------
+Navigate to the `/Backend` directory.
+
+1.  Activate the Virtual Environment:
+    Before installing dependencies or running python, you must activate the environment.
+    *   Command (PowerShell):
+        ```powershell
+        .\venv\Scripts\activate
+        ```
+    *   Command (Command Prompt):
+        ```cmd
+        venv\Scripts\activate
+        ```
+    *(When activated, your command prompt line will be prefixed with `(venv)`)*
+
+2.  Install dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3.  Set up the Environment variables:
+    *   Ensure there is a `.env` file containing valid `SUPABASE_URL` and `SUPABASE_KEY` values.
+
+4.  Start the Backend API Server:
+    *   **Recommended Development Command (with Auto-Reload):**
+        ```bash
+        uvicorn main:app --reload
+        ```
+    *   Alternative Command (using Python executor):
+        ```bash
+        python main.py
+        ```
+    *   The backend will start running on: `http://localhost:8000`
+    *   To view interactive developer API docs, visit: `http://localhost:8000/docs`
+
+--------------------------------------------------
+B. RUNNING THE FRONTEND
+--------------------------------------------------
+Open a separate terminal window and navigate to the `/Frontend` directory.
+
+1.  Install packages:
+    ```bash
+    npm install
+    ```
+
+2.  Set up the Environment variables:
+    *   Ensure there is a `.env` file (or configuration) pointing to the backend URL 
+        (e.g., `VITE_API_URL=http://localhost:8000`).
+
+3.  Start the Development Server:
+    ```bash
+    npm run dev
+    ```
+    *   The frontend will compile and start.
+    *   Open your browser and visit: `http://localhost:5173` (or the URL outputted in the terminal).
+
+================================================================================
+6. KEY CONCEPTS FOR LEARNING
+================================================================================
+To accelerate your learning curve, focus on these patterns in the codebase:
+
+1.  **FastAPI Dependency Injection (`Depends`):**
+    Open `Backend/routers/tasks.py`. Notice how endpoints include `current_user: dict = Depends(get_current_user)`. 
+    FastAPI evaluates this dependency *before* running the route logic, handles validation, 
+    and automatically blocks requests if the user is unauthorized.
+
+2.  **Supabase RESTful Query Syntax:**
+    Open `Backend/database.py` and `Backend/routers/tasks.py`. Routineo does not write complex SQL.
+    Instead, it uses standard REST operations like:
+    ```python
+    db = get_db()
+    result = db.from_("tasks").select("*").eq("user_id", current_user["id"]).execute()
+    ```
+    This translates directly into secure Postgres queries behind the scenes.
+
+3.  **React Hooks (`useState`, `useEffect`, `useContext`):**
+    *   `useState`: Manages local UI state (e.g. whether a modal is open, or forms inputs).
+    *   `useEffect`: Triggers data fetching from the FastAPI backend when a page mounts.
+    *   `useContext`: Manages global states like User Authentication so it is accessible 
+        on all pages (Landing, Dashboard, Tasks) without prop-drilling.
+
+4.  **Tailwind CSS v4 Utility Classes:**
+    Open `Frontend/src/pages/Dashboard.tsx`. Tailwind allows styling HTML directly with class names 
+    (e.g. `flex items-center justify-between p-6 bg-slate-900/50 rounded-2xl border border-slate-800`).
+    This facilitates rapid prototyping and keeps the stylesheet footprint extremely lightweight.
+
+================================================================================
+Good luck learning! Keep this guide open as you explore the codebase.
+================================================================================

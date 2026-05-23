@@ -5,8 +5,8 @@ from database import get_db
 
 # ✅ Define app FIRST
 app = FastAPI(
-    title="FocusFlow API",
-    description="Backend API for FocusFlow Productivity App",
+    title="Routineo API",
+    description="Backend API for Routineo Productivity App",
     version="1.0.0"
 )
 
@@ -39,7 +39,7 @@ async def startup_check():
 
 @app.get("/")
 async def root():
-    return {"message": "FocusFlow API is running. Visit /docs for documentation."}
+    return {"message": "Routineo API is running. Visit /docs for documentation."}
 
 if __name__ == "__main__":
     import uvicorn

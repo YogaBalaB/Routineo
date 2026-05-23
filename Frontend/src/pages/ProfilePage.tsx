@@ -1,21 +1,21 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { 
-  User as UserIcon, 
-  Mail, 
-  Shield, 
-  Bell, 
-  Palette, 
-  Globe, 
-  Trash2, 
-  Camera, 
-  Eye, 
-  EyeOff, 
-  Lock, 
-  Smartphone, 
-  LogOut, 
-  Check, 
-  Download, 
+import {
+  User as UserIcon,
+  Mail,
+  Shield,
+  Bell,
+  Palette,
+  Globe,
+  Trash2,
+  Camera,
+  Eye,
+  EyeOff,
+  Lock,
+  Smartphone,
+  LogOut,
+  Check,
+  Download,
   AlertTriangle,
   ChevronRight,
   Monitor,
@@ -67,8 +67,8 @@ export default function ProfilePage({ user }: Props) {
                     onClick={() => setActiveTab(tab.id as TabType)}
                     className={cn(
                       "flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap md:w-full",
-                      activeTab === tab.id 
-                        ? "bg-[#F3F0FF] text-[#7C3AED]" 
+                      activeTab === tab.id
+                        ? "bg-[#F3F0FF] text-[#7C3AED]"
                         : "text-[#6B7280] hover:bg-[#F9FAFB] hover:text-[#111827]"
                     )}
                   >
@@ -102,9 +102,9 @@ export default function ProfilePage({ user }: Props) {
   );
 }
 
-function TabContent({ activeTab, user }: { 
-  activeTab: TabType; 
-  user: User; 
+function TabContent({ activeTab, user }: {
+  activeTab: TabType;
+  user: User;
 }) {
   switch (activeTab) {
     case "account": return <AccountSection user={user} />;
@@ -149,11 +149,11 @@ function AccountSection({ user }: { user: User }) {
 
   return (
     <div className="space-y-6">
-      <SectionHeader 
-        title="Account Info" 
+      <SectionHeader
+        title="Account Info"
         description="Update your photo and personal details here."
       />
-      
+
       <div className="flex flex-col gap-8">
         {/* Avatar Section */}
         <div className="flex items-center gap-6">
@@ -168,7 +168,7 @@ function AccountSection({ user }: { user: User }) {
             <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileChange} />
           </div>
           <div className="space-y-2">
-            <button 
+            <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
               className="flex items-center gap-2 px-3.5 py-2 border border-[#E5E7EB] rounded-lg text-sm font-semibold text-[#374151] hover:bg-[#F9FAFB] transition-colors"
@@ -183,8 +183,8 @@ function AccountSection({ user }: { user: User }) {
         {/* Form Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormGroup label="Full Name">
-            <input 
-              value={name} 
+            <input
+              value={name}
               onChange={(e) => setName(e.target.value)}
               className={inputClasses}
               placeholder="Your full name"
@@ -193,8 +193,8 @@ function AccountSection({ user }: { user: User }) {
           <FormGroup label="Username">
             <div className="relative">
               <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9CA3AF] text-sm">@</span>
-              <input 
-                value={username} 
+              <input
+                value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className={cn(inputClasses, "pl-8")}
                 placeholder="username"
@@ -204,8 +204,8 @@ function AccountSection({ user }: { user: User }) {
           <div className="md:col-span-2">
             <FormGroup label="Bio">
               <div className="relative">
-                <textarea 
-                  value={bio} 
+                <textarea
+                  value={bio}
                   onChange={(e) => setBio(e.target.value.slice(0, 160))}
                   rows={3}
                   className={cn(inputClasses, "resize-none pr-14")}
@@ -219,9 +219,9 @@ function AccountSection({ user }: { user: User }) {
           </div>
           <div className="md:col-span-2">
             <FormGroup label="Joined Date">
-              <input 
-                value="May 12, 2024" 
-                readOnly 
+              <input
+                value="May 12, 2024"
+                readOnly
                 className={cn(inputClasses, "bg-[#F9FAFB] text-[#9CA3AF] cursor-not-allowed")}
               />
             </FormGroup>
@@ -254,11 +254,11 @@ function EmailSection({ user }: { user: User }) {
 
   return (
     <div className="space-y-8">
-      <SectionHeader 
-        title="Email Address" 
+      <SectionHeader
+        title="Email Address"
         description="Choose the email address you use to sign in and receive notifications."
       />
-      
+
       <div className="bg-[#F9FAFB] p-5 rounded-lg flex items-center justify-between border border-[#E5E7EB]">
         <div className="flex items-center gap-4">
           <div className="p-2.5 bg-white rounded-lg border border-[#E5E7EB] text-[#6B7280]">
@@ -270,7 +270,7 @@ function EmailSection({ user }: { user: User }) {
           </div>
         </div>
         {!showForm && (
-          <button 
+          <button
             type="button"
             onClick={() => setShowForm(true)}
             className="text-sm font-semibold text-[#7C3AED] hover:text-[#6D28D9] transition-colors"
@@ -284,18 +284,18 @@ function EmailSection({ user }: { user: User }) {
         <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="space-y-6 pt-6 border-t border-[#F3F4F6]">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormGroup label="New Email Address">
-              <input 
-                type="email" 
-                placeholder="example@gmail.com" 
+              <input
+                type="email"
+                placeholder="example@gmail.com"
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
                 className={inputClasses}
               />
             </FormGroup>
             <FormGroup label="Current Password">
-              <input 
-                type="password" 
-                placeholder="••••••••" 
+              <input
+                type="password"
+                placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className={inputClasses}
@@ -303,8 +303,8 @@ function EmailSection({ user }: { user: User }) {
             </FormGroup>
           </div>
           <div className="flex justify-end gap-3">
-             <button type="button" onClick={() => setShowForm(false)} className="px-5 py-2 rounded-lg text-sm font-semibold text-[#6B7280] hover:bg-[#F9FAFB] transition-colors">Cancel</button>
-             <PrimaryButton label="Send Verification" onClick={handleSendVerification} className="bg-[#7C3AED] px-6" />
+            <button type="button" onClick={() => setShowForm(false)} className="px-5 py-2 rounded-lg text-sm font-semibold text-[#6B7280] hover:bg-[#F9FAFB] transition-colors">Cancel</button>
+            <PrimaryButton label="Send Verification" onClick={handleSendVerification} className="bg-[#7C3AED] px-6" />
           </div>
         </motion.div>
       )}
@@ -330,7 +330,7 @@ function SecuritySection() {
   const [pwSaved, setPwSaved] = useState(false);
   const [twoFA, setTwoFA] = useState(false);
   const [sessions, setSessions] = useState([
-    { id: 1, device: "Chrome / Windows", location: "Mumbai, India", date: "Now", current: true },
+    { id: 1, device: "Chrome / Windows", location: "TamilNadu, India", date: "Now", current: true },
     { id: 2, device: "Safari / iPhone 13", location: "Mumbai, India", date: "2 hours ago" },
     { id: 3, device: "Firefox / macOS", location: "Bangalore, India", date: "Oct 12, 2024" },
   ]);
@@ -366,16 +366,16 @@ function SecuritySection() {
   return (
     <div className="space-y-12">
       <section>
-        <SectionHeader 
-          title="Change Password" 
+        <SectionHeader
+          title="Change Password"
           description="Update your password to keep your account secure."
         />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
           <FormGroup label="Current Password">
             <div className="relative">
-              <input 
-                type={showCurrent ? "text" : "password"} 
-                placeholder="••••••••" 
+              <input
+                type={showCurrent ? "text" : "password"}
+                placeholder="••••••••"
                 value={currentPw}
                 onChange={(e) => setCurrentPw(e.target.value)}
                 className={inputClasses}
@@ -387,9 +387,9 @@ function SecuritySection() {
           </FormGroup>
           <div className="hidden md:block" />
           <FormGroup label="New Password">
-            <input 
-              type="password" 
-              placeholder="Min 8 characters" 
+            <input
+              type="password"
+              placeholder="Min 8 characters"
               value={newPw}
               onChange={(e) => setNewPw(e.target.value)}
               className={inputClasses}
@@ -406,9 +406,9 @@ function SecuritySection() {
             )}
           </FormGroup>
           <FormGroup label="Confirm New Password">
-            <input 
-              type="password" 
-              placeholder="••••••••" 
+            <input
+              type="password"
+              placeholder="••••••••"
               value={confirmPw}
               onChange={(e) => setConfirmPw(e.target.value)}
               className={inputClasses}
@@ -425,31 +425,31 @@ function SecuritySection() {
       </section>
 
       <section>
-        <SectionHeader 
-          title="Two-Factor Authentication" 
+        <SectionHeader
+          title="Two-Factor Authentication"
           description="Add an extra layer of security to your account by requiring more than just a password to log in."
         />
         <div className="flex items-center justify-between py-4 bg-[#F9FAFB] px-5 rounded-lg border border-[#E5E7EB]">
           <div className="flex items-center gap-3">
-             <div className="w-10 h-10 rounded-lg bg-white border border-[#E5E7EB] flex items-center justify-center text-[#6B7280]">
-                <Smartphone size={20} />
-             </div>
-             <div>
-                <p className="text-sm font-semibold text-[#111827]">Authenticator App</p>
-                <p className="text-xs text-[#6B7280]">Use an app like Google Authenticator or Authy.</p>
-             </div>
+            <div className="w-10 h-10 rounded-lg bg-white border border-[#E5E7EB] flex items-center justify-center text-[#6B7280]">
+              <Smartphone size={20} />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-[#111827]">Authenticator App</p>
+              <p className="text-xs text-[#6B7280]">Use an app like Google Authenticator or Authy.</p>
+            </div>
           </div>
           <Switch enabled={twoFA} onChange={setTwoFA} />
         </div>
-        
+
         {twoFA && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6 p-6 bg-white rounded-lg border border-[#E5E7EB] flex flex-col md:flex-row items-center gap-8">
             <div className="w-36 h-36 bg-[#F9FAFB] border border-[#E5E7EB] rounded-lg flex items-center justify-center p-3">
-               {/* Mock QR Code */}
-               <div className="w-full h-full border-2 border-dashed border-[#D1D5DB] rounded-md flex flex-col items-center justify-center gap-1.5 text-[#9CA3AF]">
-                  <Check size={20} className="text-[#D1D5DB]" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest">QR Code</span>
-               </div>
+              {/* Mock QR Code */}
+              <div className="w-full h-full border-2 border-dashed border-[#D1D5DB] rounded-md flex flex-col items-center justify-center gap-1.5 text-[#9CA3AF]">
+                <Check size={20} className="text-[#D1D5DB]" />
+                <span className="text-[10px] font-bold uppercase tracking-widest">QR Code</span>
+              </div>
             </div>
             <div className="space-y-4 max-w-sm">
               <p className="text-sm font-semibold text-[#111827]">Scan with your authenticator app</p>
@@ -464,8 +464,8 @@ function SecuritySection() {
       </section>
 
       <section>
-        <SectionHeader 
-          title="Active Sessions" 
+        <SectionHeader
+          title="Active Sessions"
           description="Manage the devices where you are currently logged in to Routineo."
         />
         <div className="space-y-3">
@@ -476,15 +476,15 @@ function SecuritySection() {
                   {session.device.includes("iPhone") ? <Smartphone size={18} /> : <Monitor size={18} />}
                 </div>
                 <div>
-                   <div className="flex items-center gap-2">
-                     <p className="text-sm font-semibold text-[#111827]">{session.device}</p>
-                     {session.current && <span className="text-[10px] px-2 py-0.5 bg-[#F3F0FF] text-[#7C3AED] rounded-full font-semibold border border-[#E9D5FF]">This Device</span>}
-                   </div>
-                   <p className="text-xs text-[#6B7280] mt-0.5">{session.location} • {session.date}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-semibold text-[#111827]">{session.device}</p>
+                    {session.current && <span className="text-[10px] px-2 py-0.5 bg-[#F3F0FF] text-[#7C3AED] rounded-full font-semibold border border-[#E9D5FF]">This Device</span>}
+                  </div>
+                  <p className="text-xs text-[#6B7280] mt-0.5">{session.location} • {session.date}</p>
                 </div>
               </div>
               {!session.current && (
-                <button 
+                <button
                   type="button"
                   onClick={() => setSessions(prev => prev.filter(s => s.id !== session.id))}
                   className="text-xs font-semibold text-red-600 hover:text-red-700 transition-colors"
@@ -525,11 +525,11 @@ function NotificationsSection() {
 
   return (
     <div className="space-y-10">
-      <SectionHeader 
-        title="Notifications" 
+      <SectionHeader
+        title="Notifications"
         description="Configure how and when you want to be notified."
       />
-      
+
       <div className="space-y-10">
         <div>
           <label className="text-[12px] font-semibold text-[#6B7280] uppercase tracking-wider mb-4 block">Study Reminders</label>
@@ -539,14 +539,14 @@ function NotificationsSection() {
             <SettingToggle label="Daily Focus Reminder" active={prefs.dailyFocus} onToggle={() => togglePref("dailyFocus")} />
           </div>
           <div className="mt-6 md:w-1/2">
-             <FormGroup label="Focus reminder time">
-               <input 
-                 type="time" 
-                 value={time}
-                 onChange={(e) => setTime(e.target.value)}
-                 className={cn(inputClasses, "font-semibold")}
-               />
-             </FormGroup>
+            <FormGroup label="Focus reminder time">
+              <input
+                type="time"
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+                className={cn(inputClasses, "font-semibold")}
+              />
+            </FormGroup>
           </div>
         </div>
 
@@ -609,8 +609,8 @@ function AppearanceSection() {
 
   return (
     <div className="space-y-10">
-      <SectionHeader 
-        title="Appearance" 
+      <SectionHeader
+        title="Appearance"
         description="Customize the look and feel of your workspace."
       />
 
@@ -669,34 +669,34 @@ function AppearanceSection() {
         <label className="text-[12px] font-semibold text-[#6B7280] uppercase tracking-wider">Interface</label>
         <div className="space-y-5">
           <div className="flex items-center justify-between gap-4">
-             <div className="space-y-0.5 text-left">
-                <p className="text-sm font-medium text-[#111827]">Font Size</p>
-                <p className="text-xs text-[#6B7280]">Adjust the legibility of text content.</p>
-             </div>
-             <div className="flex bg-[#F3F4F6] p-1 rounded-lg">
-                {["small", "medium", "large"].map((size) => (
-                  <button
-                    key={size}
-                    type="button"
-                    onClick={() => setFontSize(size as any)}
-                    className={cn(
-                      "px-4 py-1.5 rounded-md text-xs font-semibold transition-all capitalize",
-                      fontSize === size ? "bg-white text-[#111827] shadow-sm" : "text-[#9CA3AF] hover:text-[#6B7280]"
-                    )}
-                  >
-                    {size}
-                  </button>
-                ))}
-             </div>
+            <div className="space-y-0.5 text-left">
+              <p className="text-sm font-medium text-[#111827]">Font Size</p>
+              <p className="text-xs text-[#6B7280]">Adjust the legibility of text content.</p>
+            </div>
+            <div className="flex bg-[#F3F4F6] p-1 rounded-lg">
+              {["small", "medium", "large"].map((size) => (
+                <button
+                  key={size}
+                  type="button"
+                  onClick={() => setFontSize(size as any)}
+                  className={cn(
+                    "px-4 py-1.5 rounded-md text-xs font-semibold transition-all capitalize",
+                    fontSize === size ? "bg-white text-[#111827] shadow-sm" : "text-[#9CA3AF] hover:text-[#6B7280]"
+                  )}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
           </div>
-          
+
           <div className="h-px bg-[#F3F4F6] w-full" />
 
-          <SettingToggle 
-            label="Compact Mode" 
-            active={compact} 
-            onToggle={() => setCompact(!compact)} 
-            description="Reduces spacing between elements." 
+          <SettingToggle
+            label="Compact Mode"
+            active={compact}
+            onToggle={() => setCompact(!compact)}
+            description="Reduces spacing between elements."
           />
         </div>
       </div>
@@ -732,8 +732,8 @@ function LanguageSection() {
 
   return (
     <div className="space-y-10">
-      <SectionHeader 
-        title="Language & Region" 
+      <SectionHeader
+        title="Language & Region"
         description="Update your language preference and regional formatting."
       />
 
@@ -741,10 +741,10 @@ function LanguageSection() {
         <div className="md:col-span-2">
           <FormGroup label="Interface Language">
             <div className="relative group">
-              <select 
-                 value={language} 
-                 onChange={(e) => setLanguage(e.target.value)}
-                 className={inputClasses}
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                className={inputClasses}
               >
                 {languages.map(l => (
                   <option key={l.code} value={l.code}>{l.flag} {l.name}</option>
@@ -757,34 +757,34 @@ function LanguageSection() {
 
         <FormGroup label="Date Format">
           <div className="relative">
-            <select 
-              value={dateFormat} 
+            <select
+              value={dateFormat}
               onChange={(e) => setDateFormat(e.target.value)}
               className={inputClasses}
             >
-               {["DD/MM/YYYY", "MM/DD/YYYY", "YYYY-MM-DD"].map(format => (
-                 <option key={format} value={format}>{format}</option>
-               ))}
+              {["DD/MM/YYYY", "MM/DD/YYYY", "YYYY-MM-DD"].map(format => (
+                <option key={format} value={format}>{format}</option>
+              ))}
             </select>
             <ChevronRight size={16} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#9CA3AF] rotate-90 pointer-events-none" />
           </div>
         </FormGroup>
 
         <FormGroup label="Timezone">
-           <div className="relative">
-             <select className={inputClasses} defaultValue="GMT+05:30">
-               <option>GMT+05:30 (India Standard Time)</option>
-               <option>GMT+00:00 (UTC)</option>
-               <option>GMT-05:00 (EST)</option>
-             </select>
-             <ChevronRight size={16} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#9CA3AF] rotate-90 pointer-events-none" />
-           </div>
+          <div className="relative">
+            <select className={inputClasses} defaultValue="GMT+05:30">
+              <option>GMT+05:30 (India Standard Time)</option>
+              <option>GMT+00:00 (UTC)</option>
+              <option>GMT-05:00 (EST)</option>
+            </select>
+            <ChevronRight size={16} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#9CA3AF] rotate-90 pointer-events-none" />
+          </div>
         </FormGroup>
 
         <div className="md:col-span-2 space-y-4 pt-4">
-           <div className="h-px bg-[#F3F4F6] w-full" />
-           <SettingToggle label="24-Hour Time Format" active={timeFormat === "24"} onToggle={() => setTimeFormat(timeFormat === "12" ? "24" : "12")} />
-           <SettingToggle label="Week Starts on Monday" active={weekStart === "Monday"} onToggle={() => setWeekStart(weekStart === "Sunday" ? "Monday" : "Sunday")} />
+          <div className="h-px bg-[#F3F4F6] w-full" />
+          <SettingToggle label="24-Hour Time Format" active={timeFormat === "24"} onToggle={() => setTimeFormat(timeFormat === "12" ? "24" : "12")} />
+          <SettingToggle label="Week Starts on Monday" active={weekStart === "Monday"} onToggle={() => setWeekStart(weekStart === "Sunday" ? "Monday" : "Sunday")} />
         </div>
       </div>
 
@@ -811,9 +811,9 @@ function DangerSection() {
   };
 
   const handleConfirmDelete = () => {
-     setIsDeleted(true);
-     setShowConfirm(false);
-     setDeleteConfirmation("");
+    setIsDeleted(true);
+    setShowConfirm(false);
+    setDeleteConfirmation("");
   };
 
   if (isDeleted) {
@@ -826,7 +826,7 @@ function DangerSection() {
           <h2 className="text-2xl font-bold text-[#111827]">Account Deleted</h2>
           <p className="text-[#6B7280]">Your account has been permanently removed from Routineo.</p>
         </div>
-        <button 
+        <button
           onClick={() => navigate("/")}
           className="px-8 py-3 bg-[#111827] text-white font-semibold rounded-lg hover:bg-black transition-all"
         >
@@ -838,8 +838,8 @@ function DangerSection() {
 
   return (
     <div className="space-y-8">
-      <SectionHeader 
-        title="Danger Zone" 
+      <SectionHeader
+        title="Danger Zone"
         description="Permanently delete your account and all of your data. This action is not reversible."
       />
 
@@ -847,10 +847,10 @@ function DangerSection() {
         <div className="p-6 divide-y divide-[#FEE2E2]">
           <div className="pb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-left">
             <div className="space-y-1">
-               <p className="text-sm font-semibold text-[#111827]">Export Account Data</p>
-               <p className="text-xs text-[#6B7280]">Get a copy of your tasks, habits and focus history in JSON format.</p>
+              <p className="text-sm font-semibold text-[#111827]">Export Account Data</p>
+              <p className="text-xs text-[#6B7280]">Get a copy of your tasks, habits and focus history in JSON format.</p>
             </div>
-            <button 
+            <button
               onClick={handleExport}
               disabled={exporting}
               className={cn(
@@ -864,10 +864,10 @@ function DangerSection() {
 
           <div className="pt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-left">
             <div className="space-y-1">
-               <p className="text-sm font-semibold text-red-600">Delete Account</p>
-               <p className="text-xs text-[#6B7280]">Permanently remove your account and all associated data.</p>
+              <p className="text-sm font-semibold text-red-600">Delete Account</p>
+              <p className="text-xs text-[#6B7280]">Permanently remove your account and all associated data.</p>
             </div>
-            <button 
+            <button
               onClick={() => setShowConfirm(true)}
               className="px-4 py-2 rounded-lg border border-red-200 bg-white text-sm font-semibold text-red-600 hover:bg-red-600 hover:text-white transition-all underline decoration-red-200 underline-offset-4"
             >
@@ -880,60 +880,60 @@ function DangerSection() {
       <AnimatePresence>
         {showConfirm && (
           <>
-            <motion.div 
-               initial={{ opacity: 0 }} 
-               animate={{ opacity: 1 }} 
-               exit={{ opacity: 0 }}
-               onClick={() => setShowConfirm(false)}
-               className="fixed inset-0 bg-[#111827]/40 backdrop-blur-[2px] z-[999]" 
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowConfirm(false)}
+              className="fixed inset-0 bg-[#111827]/40 backdrop-blur-[2px] z-[999]"
             />
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-xl p-8 shadow-2xl z-[1000] border border-[#E5E7EB]"
             >
               <div className="flex flex-col items-center text-center space-y-6">
-                 <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-red-600">
-                    <AlertTriangle size={24} />
-                 </div>
-                 <div className="space-y-2">
-                    <h3 className="text-lg font-bold text-[#111827]">Are you absolutely sure?</h3>
-                    <p className="text-[#6B7280] text-sm leading-relaxed">
-                      This action cannot be undone. This will permanently delete your account
-                      and remove all your data from our servers.
-                    </p>
-                 </div>
-                 <div className="w-full space-y-3">
-                    <p className="text-[10px] font-bold text-[#6B7280] uppercase tracking-widest">
-                      Type <span className="text-[#111827] select-all">DELETE</span> to confirm
-                    </p>
-                    <input 
-                      autoFocus
-                      placeholder="Type DELETE"
-                      value={deleteConfirmation}
-                      onChange={(e) => setDeleteConfirmation(e.target.value)}
-                      className="w-full px-4 py-3 rounded-lg border border-[#E5E7EB] focus:border-red-500 focus:ring-4 focus:ring-red-500/5 outline-none text-sm font-semibold text-center"
-                    />
-                 </div>
-                 <div className="flex flex-col w-full gap-3">
-                    <button 
-                      disabled={deleteConfirmation !== "DELETE"}
-                      onClick={handleConfirmDelete}
-                      className={cn(
-                        "w-full py-2.5 rounded-lg text-sm font-semibold transition-all",
-                        deleteConfirmation === "DELETE" ? "bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-600/10" : "bg-[#F3F4F6] text-[#9CA3AF] cursor-not-allowed"
-                      )}
-                    >
-                      Delete Forever
-                    </button>
-                    <button 
-                      onClick={() => setShowConfirm(false)}
-                      className="w-full py-2 text-[#6B7280] text-xs font-semibold hover:text-[#111827] transition-colors"
-                    >
-                      Keep Account
-                    </button>
-                 </div>
+                <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-red-600">
+                  <AlertTriangle size={24} />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-lg font-bold text-[#111827]">Are you absolutely sure?</h3>
+                  <p className="text-[#6B7280] text-sm leading-relaxed">
+                    This action cannot be undone. This will permanently delete your account
+                    and remove all your data from our servers.
+                  </p>
+                </div>
+                <div className="w-full space-y-3">
+                  <p className="text-[10px] font-bold text-[#6B7280] uppercase tracking-widest">
+                    Type <span className="text-[#111827] select-all">DELETE</span> to confirm
+                  </p>
+                  <input
+                    autoFocus
+                    placeholder="Type DELETE"
+                    value={deleteConfirmation}
+                    onChange={(e) => setDeleteConfirmation(e.target.value)}
+                    className="w-full px-4 py-3 rounded-lg border border-[#E5E7EB] focus:border-red-500 focus:ring-4 focus:ring-red-500/5 outline-none text-sm font-semibold text-center"
+                  />
+                </div>
+                <div className="flex flex-col w-full gap-3">
+                  <button
+                    disabled={deleteConfirmation !== "DELETE"}
+                    onClick={handleConfirmDelete}
+                    className={cn(
+                      "w-full py-2.5 rounded-lg text-sm font-semibold transition-all",
+                      deleteConfirmation === "DELETE" ? "bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-600/10" : "bg-[#F3F4F6] text-[#9CA3AF] cursor-not-allowed"
+                    )}
+                  >
+                    Delete Forever
+                  </button>
+                  <button
+                    onClick={() => setShowConfirm(false)}
+                    className="w-full py-2 text-[#6B7280] text-xs font-semibold hover:text-[#111827] transition-colors"
+                  >
+                    Keep Account
+                  </button>
+                </div>
               </div>
             </motion.div>
           </>
@@ -948,9 +948,9 @@ function DangerSection() {
 function SectionHeader({ title, description }: { title: string, description?: string }) {
   return (
     <header className="mb-6">
-       <h2 className="text-lg font-semibold text-[#111827]">{title}</h2>
-       {description && <p className="text-[13px] text-[#6B7280] mt-1">{description}</p>}
-       <div className="h-px bg-[#F3F4F6] w-full mt-4" />
+      <h2 className="text-lg font-semibold text-[#111827]">{title}</h2>
+      {description && <p className="text-[13px] text-[#6B7280] mt-1">{description}</p>}
+      <div className="h-px bg-[#F3F4F6] w-full mt-4" />
     </header>
   );
 }
@@ -964,9 +964,9 @@ function FormGroup({ label, children }: { label: string, children: React.ReactNo
   );
 }
 
-function SettingToggle({ label, active, onToggle, description }: { 
-  label: string, 
-  active: boolean, 
+function SettingToggle({ label, active, onToggle, description }: {
+  label: string,
+  active: boolean,
   onToggle: () => void,
   description?: string
 }) {
@@ -991,11 +991,11 @@ function Switch({ enabled, onChange }: { enabled: boolean, onChange: (v: boolean
         enabled ? "bg-[#7C3AED]" : "bg-[#D1D5DB]"
       )}
     >
-      <span 
+      <span
         className={cn(
           "pointer-events-none inline-block h-[18px] w-[18px] transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out",
           enabled ? "translate-x-[18px]" : "translate-x-0"
-        )} 
+        )}
       />
     </button>
   );
@@ -1005,8 +1005,8 @@ function SaveRow({ onSave, isSaved, onCancel }: { onSave: () => void, isSaved: b
   return (
     <div className="mt-7 pt-5 border-t border-[#F3F4F6] flex items-center justify-end gap-3">
       {onCancel && (
-        <button 
-          type="button" 
+        <button
+          type="button"
           onClick={onCancel}
           className="px-4 py-2 text-sm font-medium text-[#6B7280] hover:text-[#111827] transition-colors"
         >
@@ -1015,10 +1015,10 @@ function SaveRow({ onSave, isSaved, onCancel }: { onSave: () => void, isSaved: b
       )}
       <div className="flex items-center gap-3">
         {isSaved && <p className="text-xs font-bold text-green-600">Saved ✓</p>}
-        <PrimaryButton 
-          label="Save" 
-          onClick={onSave} 
-          className="bg-[#7C3AED] px-7 py-2.5 rounded-lg text-sm font-medium" 
+        <PrimaryButton
+          label="Save"
+          onClick={onSave}
+          className="bg-[#7C3AED] px-7 py-2.5 rounded-lg text-sm font-medium"
         />
       </div>
     </div>

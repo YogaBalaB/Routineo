@@ -1,5 +1,6 @@
 import uuid
 from typing import List
+# pyrefly: ignore [missing-import]
 from fastapi import APIRouter, Depends, HTTPException
 from models import SubTask, SubTaskCreate, SubTaskUpdate
 from database import get_db
@@ -7,7 +8,7 @@ from auth_utils import get_current_user
 
 router = APIRouter(prefix="/api/subtasks", tags=["Subtasks"])
 
-@router.post("", response_model=SubTask)
+@router.post("", response_model=SubTask, response_model_by_alias=False)
 async def create_subtask(subtask: SubTaskCreate, task_id: str, current_user: dict = Depends(get_current_user)):
     db = get_db()
     # Verify task belongs to user
@@ -24,7 +25,7 @@ async def create_subtask(subtask: SubTaskCreate, task_id: str, current_user: dic
     db.table("subtasks").insert(new_subtask).execute()
     return new_subtask
 
-@router.patch("/{subtask_id}", response_model=SubTask)
+@router.patch("/{subtask_id}", response_model=SubTask, response_model_by_alias=False)
 async def update_subtask(subtask_id: str, subtask_update: SubTaskUpdate, current_user: dict = Depends(get_current_user)):
     db = get_db()
     # Verify subtask belongs to a task owned by user

@@ -2,7 +2,7 @@
   "users": [
     {
       "id": "demo-user",
-      "email": "demo@focusflow.com",
+      "email": "demo@Routineo.com",
       "password": "$2b$10$cGWu2vi/yaiaftTP.0xk0uTbP7O8VxDpDsRZLund5YdrArdmYn5ri",
       "name": "Demo Student"
     }
@@ -35,7 +35,7 @@
     {
       "id": "demo-task-2",
       "userId": "demo-user",
-      "title": "Setup FocusFlow App",
+      "title": "Setup Routineo App",
       "dueDate": "2026-05-12",
       "priority": "medium",
       "completed": true,

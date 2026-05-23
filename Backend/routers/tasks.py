@@ -26,7 +26,7 @@ async def get_tasks(current_user: dict = Depends(get_current_user)):
     return [Task(**t) for t in res]
 
 
-@router.post("", response_model=Task)
+@router.post("", response_model=Task, response_model_by_alias=False)
 async def create_task(task: TaskCreate, current_user: dict = Depends(get_current_user)):
     db = get_db()
     task_id = str(uuid.uuid4())
@@ -72,7 +72,7 @@ async def delete_tasks_bulk(
     return {"status": "success"}
 
 
-@router.get("/{task_id}", response_model=Task)
+@router.get("/{task_id}", response_model=Task, response_model_by_alias=False)
 async def get_task(task_id: str, current_user: dict = Depends(get_current_user)):
     db = get_db()
     res = (
@@ -88,7 +88,7 @@ async def get_task(task_id: str, current_user: dict = Depends(get_current_user))
     return Task(**res[0])
 
 
-@router.patch("/{task_id}", response_model=Task)
+@router.patch("/{task_id}", response_model=Task, response_model_by_alias=False)
 async def update_task(
     task_id: str,
     task_update: TaskUpdate,
@@ -96,20 +96,13 @@ async def update_task(
 ):
     db = get_db()
 
-    update_dict = task_update.model_dump(exclude_unset=True)
+    update_dict = task_update.model_dump(by_alias=True, exclude_unset=True)
     subtasks = update_dict.pop("subtasks", None)
 
     if update_dict:
-        alias_map = {
-            "due_date":     "dueDate",
-            "created_at":   "createdAt",
-            "completed_at": "completedAt",
-            "user_id":      "userId",
-        }
-        db_data = {alias_map.get(k, k): v for k, v in update_dict.items()}
         res = (
             db.table("tasks")
-            .update(db_data)
+            .update(update_dict)
             .eq("id", task_id)
             .eq("user_id", current_user['id'])
             .execute()

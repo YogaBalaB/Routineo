@@ -54,13 +54,13 @@ async function startServer() {
 
   // Ensure demo user exists
   const initialDb = getDb();
-  if (!initialDb.users.find((u: any) => u.email === "demo@focusflow.com")) {
+  if (!initialDb.users.find((u: any) => u.email === "demo@Routineo.com")) {
     const demoPassword = await bcrypt.hash("password123", 10);
     const demoUserId = "demo-user";
-    
+
     initialDb.users.push({
       id: demoUserId,
-      email: "demo@focusflow.com",
+      email: "demo@Routineo.com",
       password: demoPassword,
       name: "Demo Student"
     });
@@ -85,7 +85,7 @@ async function startServer() {
     initialDb.tasks.push({
       id: "demo-task-2",
       userId: demoUserId,
-      title: "Setup FocusFlow App",
+      title: "Setup Routineo App",
       dueDate: new Date().toISOString().split('T')[0],
       priority: "medium",
       completed: true,
@@ -207,12 +207,12 @@ async function startServer() {
       const sortedDates = Array.from(dates).sort();
       let consecutiveDays = 0;
       let maxConsecutive = 0;
-      
+
       for (let i = 0; i < sortedDates.length; i++) {
         const allDone = userHabits.every((h: any) => h.history.includes(sortedDates[i]));
         if (allDone) {
           if (i > 0) {
-            const prev = new Date(sortedDates[i-1]);
+            const prev = new Date(sortedDates[i - 1]);
             const curr = new Date(sortedDates[i]);
             const diff = (curr.getTime() - prev.getTime()) / (1000 * 3600 * 24);
             if (diff === 1) consecutiveDays++;
@@ -254,12 +254,12 @@ async function startServer() {
       const sortedDates = Array.from(dates).sort();
       let consecutiveDays = 0;
       let maxConsecutive = 0;
-      
+
       for (let i = 0; i < sortedDates.length; i++) {
         const allDone = userHabits.every((h: any) => h.history.includes(sortedDates[i]));
         if (allDone) {
           if (i > 0) {
-            const prev = new Date(sortedDates[i-1]);
+            const prev = new Date(sortedDates[i - 1]);
             const curr = new Date(sortedDates[i]);
             const diff = (curr.getTime() - prev.getTime()) / (1000 * 3600 * 24);
             if (diff === 1) consecutiveDays++;
@@ -403,12 +403,12 @@ async function startServer() {
     const today = new Date().toISOString().split('T')[0];
     if (!habit.history.includes(today)) {
       habit.history.push(today);
-      
+
       const lastCheck = habit.lastCheckIn;
       if (lastCheck) {
         const lastDate = new Date(lastCheck);
         const diff = Math.floor((new Date(today).getTime() - lastDate.getTime()) / (1000 * 3600 * 24));
-        
+
         if (diff === 1) {
           habit.streak += 1;
         } else if (diff > 1) {
@@ -418,11 +418,11 @@ async function startServer() {
       } else {
         habit.streak = 1;
       }
-      
+
       if (habit.streak > (habit.longestStreak || 0)) {
         habit.longestStreak = habit.streak;
       }
-      
+
       habit.lastCheckIn = today;
       saveDb(db);
       const newBadges = checkBadges(req.user.id);
@@ -454,12 +454,12 @@ async function startServer() {
       if (habit.lastCheckIn === today) {
         // Simple streak decrement
         habit.streak = Math.max(0, habit.streak - 1);
-        
+
         // Find the previous check-in date in history to restore lastCheckIn
         const previousCheckIns = habit.history
           .filter((d: string) => d < today)
           .sort((a: string, b: string) => b.localeCompare(a));
-        
+
         habit.lastCheckIn = previousCheckIns.length > 0 ? previousCheckIns[0] : null;
       }
       saveDb(db);
@@ -499,10 +499,10 @@ async function startServer() {
   app.post("/api/moods", authenticateToken, (req: any, res: any) => {
     const db = getDb();
     const today = new Date().toISOString().split('T')[0];
-    
+
     // Replace today's mood if it exists
     db.moods = db.moods.filter((m: any) => !(m.userId === req.user.id && m.date === today));
-    
+
     const newMood = {
       userId: req.user.id,
       mood: req.body.mood, // emoji or label

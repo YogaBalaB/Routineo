@@ -11,12 +11,15 @@ import {
   Trash2,
   Search,
   X,
+  AlertCircle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { Task } from "../types";
 import { cn } from "../lib/utils";
 import { API_URL } from "../lib/api";
 import toast from "react-hot-toast";
+import confetti from "canvas-confetti";
+import TaskCompletionPopup from "../components/TaskCompletionPopup";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -103,6 +106,7 @@ export default function TasksPage() {
   const [filterPriority, setFilterPriority] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [filterStatus,   setFilterStatus]   = useState<"all" | "active" | "done">("all");
+  const [completedTask,  setCompletedTask]  = useState<Task | null>(null);
 
   // ─── Fetch ──────────────────────────────────────────────────────────────────
 
@@ -210,14 +214,27 @@ export default function TasksPage() {
 
   const toggleComplete = async (task: Task, e: MouseEvent) => {
     e.stopPropagation();
+    // Block completion if there are unfinished subtasks
+    if (!task.completed && task.subtasks && task.subtasks.length > 0) {
+      const remaining = task.subtasks.filter((st) => !st.completed).length;
+      if (remaining > 0) {
+        toast.error(`Finish all ${remaining} subtask${remaining > 1 ? "s" : ""} first!`);
+        return;
+      }
+    }
+    const completing = !task.completed;
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(`${API_URL}/api/tasks/${task.id}`, {
         method: "PATCH",
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ completed: !task.completed }),
+        body: JSON.stringify({ completed: completing }),
       });
       if (!res.ok) throw new Error("Update failed");
+      if (completing) {
+        confetti({ particleCount: 150, spread: 90, origin: { y: 0.5 }, colors: ["#8B5CF6", "#3B82F6", "#10B981", "#F59E0B"] });
+        setCompletedTask({ ...task, completed: true });
+      }
       await fetchTasks();
     } catch { toast.error("Failed to update task"); }
   };
@@ -268,6 +285,7 @@ export default function TasksPage() {
 
   return (
     <div className="w-full mx-auto space-y-6 pb-24 md:pb-20 px-3 md:px-8 xl:px-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <TaskCompletionPopup task={completedTask} onClose={() => setCompletedTask(null)} />
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -333,6 +351,7 @@ export default function TasksPage() {
             const pri           = PRIORITIES.find((p) => p.level === task.priority);
             const subtasksDone  = task.subtasks?.filter((s) => s.completed).length ?? 0;
             const subtasksTotal = task.subtasks?.length ?? 0;
+            const hasUnfinishedSubtasks = !task.completed && subtasksTotal > 0 && subtasksDone < subtasksTotal;
 
             return (
               <motion.div
@@ -345,11 +364,28 @@ export default function TasksPage() {
                   task.completed ? "border-slate-100 opacity-60" : "border-slate-100 hover:border-neon-purple/20"
                 )}
               >
-                <button onClick={(e) => toggleComplete(task, e)}
-                  className={cn("shrink-0 w-8 h-8 rounded-xl border-2 flex items-center justify-center transition-all",
-                    task.completed ? "bg-emerald-500 border-emerald-500 text-white" : "border-slate-200 hover:border-neon-purple hover:text-neon-purple text-slate-300")}>
-                  {task.completed ? <CheckCircle2 size={16} /> : <Circle size={16} />}
-                </button>
+                {/* Completion button with lock when subtasks pending */}
+                <div className="relative shrink-0 group/check">
+                  <button onClick={(e) => toggleComplete(task, e)}
+                    className={cn("w-8 h-8 rounded-xl border-2 flex items-center justify-center transition-all",
+                      task.completed
+                        ? "bg-emerald-500 border-emerald-500 text-white"
+                        : hasUnfinishedSubtasks
+                          ? "bg-amber-50 border-amber-200 text-amber-400 cursor-not-allowed"
+                          : "border-slate-200 hover:border-neon-purple hover:text-neon-purple text-slate-300")}>
+                    {task.completed
+                      ? <CheckCircle2 size={16} />
+                      : hasUnfinishedSubtasks
+                        ? <AlertCircle size={16} />
+                        : <Circle size={16} />}
+                  </button>
+                  {/* Tooltip */}
+                  {hasUnfinishedSubtasks && (
+                    <div className="absolute top-[calc(100%+6px)] left-1/2 -translate-x-1/2 px-2.5 py-1.5 bg-[#111827] text-white text-[10px] rounded-lg whitespace-nowrap opacity-0 group-hover/check:opacity-100 transition-opacity pointer-events-none z-20 font-semibold shadow-xl">
+                      {subtasksTotal - subtasksDone} subtask{subtasksTotal - subtasksDone > 1 ? "s" : ""} remaining
+                    </div>
+                  )}
+                </div>
 
                 <div className="flex-1 min-w-0 space-y-1.5">
                   <p className={cn("font-bold text-sm md:text-base truncate", task.completed ? "text-slate-400 line-through" : "text-dark-navy")}>
@@ -369,13 +405,17 @@ export default function TasksPage() {
                       </span>
                     )}
                     {subtasksTotal > 0 && (
-                      <span className="text-[10px] font-bold text-slate-400">{subtasksDone}/{subtasksTotal} subtasks</span>
+                      <span className={cn("text-[10px] font-bold",
+                        hasUnfinishedSubtasks ? "text-amber-500" : "text-slate-400")}>
+                        {subtasksDone}/{subtasksTotal} subtasks
+                      </span>
                     )}
                   </div>
                 </div>
 
+                {/* Delete — always visible at low opacity, full on hover */}
                 <button onClick={(e) => deleteTask(task.id, e)}
-                  className="shrink-0 opacity-0 group-hover:opacity-100 p-2 text-slate-300 hover:text-red-400 hover:bg-red-50 rounded-xl transition-all">
+                  className="shrink-0 opacity-30 group-hover:opacity-100 p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
                   <Trash2 size={15} />
                 </button>
               </motion.div>

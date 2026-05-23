@@ -27,7 +27,7 @@ async def get_habits(current_user: dict = Depends(get_current_user)):
     return [Habit(**h) for h in res]
 
 
-@router.post("", response_model=Habit)
+@router.post("", response_model=Habit, response_model_by_alias=False)
 async def create_habit(habit: HabitCreate, current_user: dict = Depends(get_current_user)):
     db = get_db()
     habit_id = str(uuid.uuid4())
