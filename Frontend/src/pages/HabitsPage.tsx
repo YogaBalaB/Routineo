@@ -24,6 +24,7 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 import toast from "react-hot-toast";
 import { Habit, EarnedBadge } from "../types";
+import { API_URL } from "../lib/api";
 import { cn } from "../lib/utils";
 import { badgeEmitter } from "../components/BadgeEarnedPopup";
 import PrimaryButton from "../components/PrimaryButton";
@@ -168,7 +169,7 @@ export default function HabitsPage() {
 
   const fetchHabits = async () => {
     const token = localStorage.getItem("token");
-    const res = await fetch("/api/habits", {
+    const res = await fetch(`${API_URL}/api/habits`, {
       headers: { "Authorization": `Bearer ${token}` }
     });
     if (res.ok) setHabits(await res.json());
@@ -192,7 +193,7 @@ export default function HabitsPage() {
     setIsLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("/api/habits", {
+      const res = await fetch(`${API_URL}/api/habits`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -225,7 +226,7 @@ export default function HabitsPage() {
     setIsLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`/api/habits/${editingHabitId}`, {
+      const res = await fetch(`${API_URL}/api/habits/${editingHabitId}`, {
         method: "PATCH",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -264,7 +265,7 @@ export default function HabitsPage() {
 
     try {
       if (deleteModal.isBulk) {
-        const res = await fetch("/api/habits/bulk", {
+        const res = await fetch(`${API_URL}/api/habits/bulk`, {
           method: "DELETE",
           headers: {
             "Authorization": `Bearer ${token}`,
@@ -281,7 +282,7 @@ export default function HabitsPage() {
         }
       } else if (deleteModal.habitId) {
         const id = deleteModal.habitId;
-        const res = await fetch(`/api/habits/${id}`, {
+        const res = await fetch(`${API_URL}/api/habits/${id}`, {
           method: "DELETE",
           headers: { "Authorization": `Bearer ${token}` }
         });
@@ -318,7 +319,7 @@ export default function HabitsPage() {
   const resetStreak = async (id: string) => {
     if (!confirm("Start streak over from day 1?")) return;
     const token = localStorage.getItem("token");
-    const res = await fetch(`/api/habits/${id}/reset-streak`, {
+    const res = await fetch(`${API_URL}/api/habits/${id}/reset-streak`, {
       method: "POST",
       headers: { "Authorization": `Bearer ${token}` }
     });
@@ -327,7 +328,7 @@ export default function HabitsPage() {
 
   const checkIn = async (id: string) => {
     const token = localStorage.getItem("token");
-    const res = await fetch(`/api/habits/${id}/checkin`, {
+    const res = await fetch(`${API_URL}/api/habits/${id}/checkin`, {
       method: "POST",
       headers: { "Authorization": `Bearer ${token}` }
     });
@@ -348,7 +349,7 @@ export default function HabitsPage() {
 
   const undoCheckIn = async (id: string) => {
     const token = localStorage.getItem("token");
-    const res = await fetch(`/api/habits/${id}/undo-checkin`, {
+    const res = await fetch(`${API_URL}/api/habits/${id}/undo-checkin`, {
       method: "POST",
       headers: { "Authorization": `Bearer ${token}` }
     });

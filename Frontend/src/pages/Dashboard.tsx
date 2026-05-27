@@ -19,6 +19,7 @@ import {
 
 import { motion } from "motion/react";
 import { User, Task, Habit, Session, EarnedBadge } from "../types";
+import { API_URL } from "../lib/api";
 import { cn } from "../lib/utils";
 import { formatDate } from "../lib/dateUtils";
 import { badgeEmitter } from "../components/BadgeEarnedPopup";
@@ -78,10 +79,10 @@ export default function Dashboard({ user }: Props) {
          };
 
          const [tRes, hRes, sRes, mRes] = await Promise.all([
-            fetch("/api/tasks", { headers }),
-            fetch("/api/habits", { headers }),
-            fetch("/api/sessions", { headers }),
-            fetch("/api/moods", { headers }),
+            fetch(`${API_URL}/api/tasks`, { headers }),
+            fetch(`${API_URL}/api/habits`, { headers }),
+            fetch(`${API_URL}/api/sessions`, { headers }),
+            fetch(`${API_URL}/api/moods`, { headers }),
          ]);
 
          setTasks(await tRes.json());
@@ -89,7 +90,7 @@ export default function Dashboard({ user }: Props) {
          setSessions(await sRes.json());
 
          const [badgesRes, moodsData] = await Promise.all([
-            fetch("/api/badges", { headers }),
+            fetch(`${API_URL}/api/badges`, { headers }),
             mRes.json(),
          ]);
 
@@ -132,7 +133,7 @@ export default function Dashboard({ user }: Props) {
 
       const duration = mode === "focus" ? 25 : 5;
 
-      const sRes = await fetch("/api/sessions", {
+      const sRes = await fetch(`${API_URL}/api/sessions`, {
          method: "POST",
          headers: {
             Authorization: `Bearer ${token}`,
@@ -148,7 +149,7 @@ export default function Dashboard({ user }: Props) {
 
       setSessions(
          await (
-            await fetch("/api/sessions", {
+            await fetch(`${API_URL}/api/sessions`, {
                headers: {
                   Authorization: `Bearer ${token}`,
                },
@@ -180,7 +181,7 @@ export default function Dashboard({ user }: Props) {
    const setMood = async (mood: string) => {
       const token = localStorage.getItem("token");
 
-      const res = await fetch("/api/moods", {
+      const res = await fetch(`${API_URL}/api/moods`, {
          method: "POST",
          headers: {
             Authorization: `Bearer ${token}`,
@@ -200,7 +201,7 @@ export default function Dashboard({ user }: Props) {
    ) => {
       const token = localStorage.getItem("token");
 
-      const res = await fetch(`/api/tasks/${id}`, {
+      const res = await fetch(`${API_URL}/api/tasks/${id}`, {
          method: "PATCH",
          headers: {
             Authorization: `Bearer ${token}`,

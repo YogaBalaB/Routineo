@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Flame, Eye, EyeOff, Loader2 } from "lucide-react";
 import { motion } from "motion/react";
 import { User } from "../types";
+import { API_URL } from "../lib/api";
 
 interface Props {
   onAuth: (user: User) => void;
@@ -23,7 +24,7 @@ export default function RegisterPage({ onAuth }: Props) {
     setError("");
 
     try {
-      const res = await fetch("/api/auth/register", {
+      const res = await fetch(`${API_URL}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password })

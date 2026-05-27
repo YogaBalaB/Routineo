@@ -15,6 +15,7 @@ import {
 import { TrendingUp, Clock, Calendar, Zap, Download } from "lucide-react";
 import { Session, Task, Habit } from "../types";
 import { motion } from "motion/react";
+import { API_URL } from "../lib/api";
 
 export default function AnalyticsPage() {
   const [sessions, setSessions] = useState<Session[]>([]);
@@ -27,9 +28,9 @@ export default function AnalyticsPage() {
       const headers = { "Authorization": `Bearer ${token}` };
       
       const [sRes, tRes, hRes] = await Promise.all([
-        fetch("/api/sessions", { headers }),
-        fetch("/api/tasks", { headers }),
-        fetch("/api/habits", { headers }),
+        fetch(`${API_URL}/api/sessions`, { headers }),
+        fetch(`${API_URL}/api/tasks`, { headers }),
+        fetch(`${API_URL}/api/habits`, { headers }),
       ]);
 
       setSessions(await sRes.json());
