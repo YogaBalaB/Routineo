@@ -513,6 +513,29 @@ async function startServer() {
     res.json(newMood);
   });
 
+  // --- Proxy Routes for Swagger API Docs ---
+  app.get("/docs", async (req, res) => {
+    const backendUrl = process.env.VITE_API_URL || "http://localhost:8000";
+    try {
+      const response = await fetch(`${backendUrl}/docs`);
+      const body = await response.text();
+      res.send(body);
+    } catch (err: any) {
+      res.status(500).send("Error proxying docs: " + err.message);
+    }
+  });
+
+  app.get("/openapi.json", async (req, res) => {
+    const backendUrl = process.env.VITE_API_URL || "http://localhost:8000";
+    try {
+      const response = await fetch(`${backendUrl}/openapi.json`);
+      const body = await response.json();
+      res.json(body);
+    } catch (err: any) {
+      res.status(500).send("Error proxying openapi.json: " + err.message);
+    }
+  });
+
   // --- Vite Middleware ---
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
