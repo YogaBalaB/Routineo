@@ -33,9 +33,9 @@ app.include_router(badges.router)
 async def startup_check():
     try:
         get_db().from_("tasks").select("id").limit(1).execute()
-        print("✅ DB connection OK")
+        print("[OK] DB connection OK")
     except Exception as e:
-        print(f"⚠️ DB connection issue: {e}")
+        print(f"[WARN] DB connection issue: {e}")
 
 @app.get("/")
 async def root():
