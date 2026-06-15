@@ -5,11 +5,15 @@ import fs from "fs";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET || "focus-flow-secret-key";
-const DB_PATH = path.join(process.cwd(), "db.json");
+const DB_PATH = path.join(__dirname, "db.json");
 
 // Initialize database if it doesn't exist
 if (!fs.existsSync(DB_PATH)) {
@@ -484,7 +488,7 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(process.cwd(), "dist");
+    const distPath = path.join(__dirname, "dist");
     app.use(express.static(distPath));
     app.get("*", (req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
