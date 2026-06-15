@@ -29,6 +29,8 @@ CREATE TABLE IF NOT EXISTS subtasks (
     task_id TEXT REFERENCES tasks(id) ON DELETE CASCADE,
     title TEXT NOT NULL,
     completed BOOLEAN DEFAULT FALSE,
+    completed_at TEXT,
+    due_date TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 

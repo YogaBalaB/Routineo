@@ -35,6 +35,7 @@ class Token(BaseModel):
 class SubTaskBase(AppModel):
     title: str = Field(..., min_length=1)
     completed: bool = False
+    completedAt: Optional[str] = Field(None, alias="completed_at")
     dueDate: Optional[str] = Field(None, alias="due_date")
 
 class SubTaskCreate(SubTaskBase):
