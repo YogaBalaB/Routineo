@@ -52,67 +52,7 @@ async function startServer() {
 
   app.use(express.json());
 
-  // Ensure demo user exists
-  const initialDb = getDb();
-  if (!initialDb.users.find((u: any) => u.email === "demo@Routineo.com")) {
-    const demoPassword = await bcrypt.hash("password123", 10);
-    const demoUserId = "demo-user";
 
-    initialDb.users.push({
-      id: demoUserId,
-      email: "demo@Routineo.com",
-      password: demoPassword,
-      name: "Demo Student"
-    });
-
-    // Add initial demo tasks
-    initialDb.tasks.push({
-      id: "demo-task-1",
-      userId: demoUserId,
-      title: "Review Student Productivity PRD",
-      dueDate: new Date().toISOString().split('T')[0],
-      priority: "high",
-      completed: false,
-      createdAt: new Date().toISOString(),
-      category: "Work",
-      notes: "Focus on the technical requirements section.",
-      subtasks: [
-        { id: "st1", title: "Read document", completed: true },
-        { id: "st2", title: "Write summary", completed: false }
-      ],
-      pinned: true
-    });
-    initialDb.tasks.push({
-      id: "demo-task-2",
-      userId: demoUserId,
-      title: "Setup Routineo App",
-      dueDate: new Date().toISOString().split('T')[0],
-      priority: "medium",
-      completed: true,
-      createdAt: new Date().toISOString(),
-      category: "Personal",
-      notes: "Check all the initial environment variables.",
-      subtasks: [],
-      pinned: false
-    });
-
-    // Add initial demo habits
-    initialDb.habits.push({
-      id: "demo-habit-1",
-      userId: demoUserId,
-      title: "Read for 30 minutes",
-      icon: "Book",
-      category: "Study",
-      goalDays: 30,
-      streak: 12,
-      longestStreak: 12,
-      missedDays: 2,
-      lastCheckIn: new Date(Date.now() - 86400000).toISOString().split('T')[0],
-      history: []
-    });
-
-    saveDb(initialDb);
-  }
 
   // Helper for auth middleware
   const authenticateToken = (req: any, res: any, next: any) => {

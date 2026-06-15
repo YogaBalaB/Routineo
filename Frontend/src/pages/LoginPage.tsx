@@ -107,16 +107,7 @@ export default function LoginPage({ onAuth }: Props) {
               {isLoading ? <Loader2 className="animate-spin" /> : "Sign In"}
             </button>
 
-            <button
-              type="button"
-              onClick={() => {
-                setEmail("demo@Routineo.com");
-                setPassword("password123");
-              }}
-              className="w-full bg-slate-100 text-slate-600 py-3 rounded-xl font-bold text-lg hover:bg-slate-200 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
-            >
-              Demo Login
-            </button>
+
           </form>
 
           <p className="mt-8 text-center text-slate-500">
