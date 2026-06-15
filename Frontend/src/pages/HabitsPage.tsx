@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 import {
   Flame,
   Plus,
@@ -706,7 +706,7 @@ export default function HabitsPage() {
                           className="px-4 py-2 text-xs rounded-xl"
                           label="Save"
                           isLoading={isLoading}
-                          onClick={(e: React.MouseEvent) => updateHabit(e)}
+                          onClick={() => { updateHabit(); }}
                         />
                         <button
                           type="button"

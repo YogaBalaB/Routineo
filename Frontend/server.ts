@@ -10,10 +10,26 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+import os from "os";
+
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET || "focus-flow-secret-key";
-const DB_PATH = path.join(__dirname, "db.json");
+let DB_PATH = path.join(__dirname, "db.json");
+
+// Test if DB_PATH is writable, if not, fallback to OS temp dir
+try {
+  if (fs.existsSync(DB_PATH)) {
+    fs.accessSync(DB_PATH, fs.constants.W_OK);
+  } else {
+    const tempFile = path.join(__dirname, ".db-write-test");
+    fs.writeFileSync(tempFile, "test");
+    fs.unlinkSync(tempFile);
+  }
+} catch (e) {
+  console.warn(`[WARN] Directory ${__dirname} is not writable. Falling back to OS temp dir.`);
+  DB_PATH = path.join(os.tmpdir(), "db.json");
+}
 
 // Initialize database if it doesn't exist
 if (!fs.existsSync(DB_PATH)) {
@@ -52,7 +68,7 @@ const saveDb = (db: any) => fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
   app.use(express.json());
 
@@ -76,35 +92,44 @@ async function startServer() {
 
   // --- Auth Routes ---
   app.post("/api/auth/register", async (req, res) => {
-    const { email, password, name } = req.body;
-    const db = getDb();
+    try {
+      const { email, password, name } = req.body;
+      const db = getDb();
 
-    if (db.users.find((u: any) => u.email === email)) {
-      return res.status(400).json({ error: "User already exists" });
+      if (db.users.find((u: any) => u.email === email)) {
+        return res.status(400).json({ error: "User already exists" });
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const newUser = { id: Date.now().toString(), email, password: hashedPassword, name };
+      db.users.push(newUser);
+      saveDb(db);
+
+      const token = jwt.sign({ id: newUser.id, email: newUser.email }, JWT_SECRET);
+      res.json({ token, user: { id: newUser.id, email: newUser.email, name: newUser.name } });
+    } catch (err: any) {
+      console.error("Registration error:", err);
+      res.status(500).json({ error: err.message || "Registration failed" });
     }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = { id: Date.now().toString(), email, password: hashedPassword, name };
-    db.users.push(newUser);
-    saveDb(db);
-
-    const token = jwt.sign({ id: newUser.id, email: newUser.email }, JWT_SECRET);
-    res.json({ token, user: { id: newUser.id, email: newUser.email, name: newUser.name } });
   });
 
   app.post("/api/auth/login", async (req, res) => {
-    const { email, password } = req.body;
-    const db = getDb();
-    const user = db.users.find((u: any) => u.email === email);
+    try {
+      const { email, password } = req.body;
+      const db = getDb();
+      const user = db.users.find((u: any) => u.email === email);
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(400).json({ error: "Invalid credentials" });
+      if (!user || !(await bcrypt.compare(password, user.password))) {
+        return res.status(400).json({ error: "Invalid credentials" });
+      }
+
+      const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET);
+      res.json({ token, user: { id: user.id, email: user.email, name: user.name } });
+    } catch (err: any) {
+      console.error("Login error:", err);
+      res.status(500).json({ error: err.message || "Login failed" });
     }
-
-    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET);
-    res.json({ token, user: { id: user.id, email: user.email, name: user.name } });
   });
-
   app.get("/api/auth/me", authenticateToken, (req: any, res: any) => {
     const db = getDb();
     const user = db.users.find((u: any) => u.id === req.user.id);

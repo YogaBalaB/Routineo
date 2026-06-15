@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Flame, Eye, EyeOff, Loader2 } from "lucide-react";
 import { motion } from "motion/react";
 import { User } from "../types";
-import { API_URL } from "../lib/api";
+import { API_URL, parseApiResponse } from "../lib/api";
 
 interface Props {
   onAuth: (user: User) => void;
@@ -30,8 +30,8 @@ export default function RegisterPage({ onAuth }: Props) {
         body: JSON.stringify({ name, email, password })
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Registration failed");
+      const data = await parseApiResponse<{ token: string; user: User; error?: string; detail?: string }>(res);
+      if (!res.ok) throw new Error(data.error || data.detail || "Registration failed");
 
       localStorage.setItem("token", data.token);
       onAuth(data.user);
